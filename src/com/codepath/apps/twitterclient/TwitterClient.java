@@ -38,11 +38,24 @@ public class TwitterClient extends OAuthBaseClient {
     	client.get(url, params, handler);
     }
     
+    public void getHomeTimelineSince(AsyncHttpResponseHandler handler, long sinceId) {
+    	RequestParams params = new RequestParams();
+    	params.put("since_id", Long.toString(sinceId));
+    	getHomeTimeline(handler, params);
+    }
+    
     public void getHomeTimeline(AsyncHttpResponseHandler handler, long maxId) {
     	RequestParams params = new RequestParams();
     	params.put("count", Integer.toString(COUNT));
     	params.put("max_id", Long.toString(maxId));
     	getHomeTimeline(handler, params);
+    }
+    
+    public void postTweet(AsyncHttpResponseHandler handler, String tweet) {
+    	String url = getApiUrl("statuses/update.json");
+    	RequestParams params = new RequestParams();
+    	params.put("status", tweet);
+    	client.post(url, params, handler);
     }
     
     // CHANGE THIS
