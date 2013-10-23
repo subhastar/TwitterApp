@@ -3,6 +3,7 @@ package com.codepath.apps.twitterclient;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,10 +11,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
+
+import eu.erikw.PullToRefreshListView;
+import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
 public class TimelineActivity extends Activity {
 	private static int REQUEST_CODE_COMPOSE = 1;
@@ -22,6 +25,7 @@ public class TimelineActivity extends Activity {
 	private long sinceId = Long.MAX_VALUE;
 	private TweetsAdapter tweetsAdapter;
 	private ArrayList<Tweet> tweets;
+	private PullToRefreshListView lvTweets;
 
 
 	@Override
@@ -30,7 +34,7 @@ public class TimelineActivity extends Activity {
 		setContentView(R.layout.activity_timeline);
 		
 		tweets = new ArrayList<Tweet>();
-		ListView lvTweets = (ListView) findViewById(R.id.lvTweets);
+		lvTweets = (PullToRefreshListView) findViewById(R.id.lvTweets);
 		tweetsAdapter = new TweetsAdapter(getBaseContext(), tweets);
 		lvTweets.setAdapter(tweetsAdapter);
 		
@@ -38,9 +42,20 @@ public class TimelineActivity extends Activity {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				ArrayList<Tweet> olderTweets = Tweet.fromJson(jsonTweets);
+				if (olderTweets.size() == 0) {
+					Log.d("DEBUG", "size zero array");
+					return;
+				}
 				tweetsAdapter.addAll(olderTweets);
 				maxId = olderTweets.get(olderTweets.size() - 1).getId() - 1;
 				sinceId = olderTweets.get(0).getId();
+				
+				lvTweets.onRefreshComplete();
+			}
+			
+			@Override
+			public void onFailure(Throwable t, JSONObject errorResponse) {
+				Log.d("DEBUG", "fail case");
 			}
 		};
 		
@@ -50,6 +65,14 @@ public class TimelineActivity extends Activity {
 			@Override
 			public void onLoadMore(int page, int totalItemsCount) {
 				TwitterClientApp.getRestClient().getHomeTimeline(handler, maxId);
+			}
+		});
+		
+		lvTweets.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				Log.d("DEBUG", "calling load new tweets");
+				loadNewTweets();
 			}
 		});
 	}
@@ -90,12 +113,15 @@ public class TimelineActivity extends Activity {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				ArrayList<Tweet> newTweets = Tweet.fromJson(jsonTweets);
+				Log.d("DEBUG", "having new tweets" + newTweets.size());
 				for(Tweet tweet : newTweets) {
 					tweets.add(0, tweet);
 				}
 				tweetsAdapter.notifyDataSetChanged();
 				maxId = newTweets.get(newTweets.size() - 1).getId() - 1;
 				sinceId = newTweets.get(0).getId();
+				
+				lvTweets.onRefreshComplete();
 			}
 		};
 		
