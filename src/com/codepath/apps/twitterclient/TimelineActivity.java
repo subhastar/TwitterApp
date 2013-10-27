@@ -113,13 +113,14 @@ public class TimelineActivity extends Activity {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				ArrayList<Tweet> newTweets = Tweet.fromJson(jsonTweets);
-				Log.d("DEBUG", "having new tweets" + newTweets.size());
-				for(Tweet tweet : newTweets) {
-					tweets.add(0, tweet);
+				if (newTweets.size() > 0) {
+					for(Tweet tweet : newTweets) {
+						tweets.add(0, tweet);
+					}
+					tweetsAdapter.notifyDataSetChanged();
+					maxId = newTweets.get(newTweets.size() - 1).getId() - 1;
+					sinceId = newTweets.get(0).getId();
 				}
-				tweetsAdapter.notifyDataSetChanged();
-				maxId = newTweets.get(newTweets.size() - 1).getId() - 1;
-				sinceId = newTweets.get(0).getId();
 				
 				lvTweets.onRefreshComplete();
 			}
