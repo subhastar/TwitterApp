@@ -7,19 +7,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.codepath.apps.twitterclient.fragments.TweetsListFragment;
+import com.codepath.apps.twitterclient.fragments.HomeTimelineFragment;
 
 public class TimelineActivity extends FragmentActivity {
 	private static int REQUEST_CODE_COMPOSE = 1;
 	
-	private TweetsListFragment tweetsListFragment;
+	private HomeTimelineFragment tweetsListFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
 		
-		tweetsListFragment = (TweetsListFragment) getSupportFragmentManager()
+		tweetsListFragment = (HomeTimelineFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.homeTimelineFragment);
 	}
 

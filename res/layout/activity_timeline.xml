@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/homeTimelineFragment"
-        android:name="com.codepath.apps.twitterclient.fragments.TweetsListFragment"
+        android:name="com.codepath.apps.twitterclient.fragments.HomeTimelineFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

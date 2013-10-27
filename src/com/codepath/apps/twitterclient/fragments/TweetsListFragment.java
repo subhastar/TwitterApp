@@ -15,19 +15,22 @@ import android.view.ViewGroup;
 import com.codepath.apps.twitterclient.EndlessScrollListener;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TweetsAdapter;
-import com.codepath.apps.twitterclient.TwitterClientApp;
 import com.codepath.apps.twitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import eu.erikw.PullToRefreshListView;
 import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
-public class TweetsListFragment extends Fragment {
-	private long maxId = 0;
-	private long sinceId = Long.MAX_VALUE;
+public abstract class TweetsListFragment extends Fragment {
 	private TweetsAdapter tweetsAdapter;
 	private ArrayList<Tweet> tweets;
 	private PullToRefreshListView lvTweets;
+	
+	protected JsonHttpResponseHandler addOlderTweetsHandler;
+	protected JsonHttpResponseHandler addNewerTweetsHandler;
+	protected long maxId = 0;
+	protected long sinceId = Long.MAX_VALUE;
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inf, ViewGroup parent, Bundle savedInstanceState) {
@@ -43,7 +46,40 @@ public class TweetsListFragment extends Fragment {
 		tweetsAdapter = new TweetsAdapter(getActivity(), tweets);
 		lvTweets.setAdapter(tweetsAdapter);
 		
-		final JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+		createHandlers();
+		
+		// Fetch base tweets
+		fetchBaseTweets();
+		
+		// Scrolling at the bottom should load older tweets
+		lvTweets.setOnScrollListener(new EndlessScrollListener() {
+			@Override
+			public void onLoadMore(int page, int totalItemsCount) {
+				loadOlderTweets();
+			}
+		});
+		
+		// Pull to refresh should add newer tweets
+		lvTweets.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				loadNewTweets();
+			}
+		});
+	}
+	
+	// Fetches the first set of base tweets
+	public abstract void fetchBaseTweets();
+
+	// This method loads older tweets from the bottom of the feed
+	public abstract void loadOlderTweets();
+
+	// This method loads newer tweets from the top of the feed
+	public abstract void loadNewTweets();
+
+	private void createHandlers() {
+		// This handler adds older tweets to the bottom of the feed
+		addOlderTweetsHandler = new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				ArrayList<Tweet> olderTweets = Tweet.fromJson(jsonTweets);
@@ -60,30 +96,12 @@ public class TweetsListFragment extends Fragment {
 			
 			@Override
 			public void onFailure(Throwable t, JSONObject errorResponse) {
-				Log.d("DEBUG", "fail case");
+				Log.d("DEBUG", "fail case " + errorResponse);
 			}
 		};
-		
-		TwitterClientApp.getRestClient().getHomeTimeline(handler, null);
-		
-		lvTweets.setOnScrollListener(new EndlessScrollListener() {
-			@Override
-			public void onLoadMore(int page, int totalItemsCount) {
-				TwitterClientApp.getRestClient().getHomeTimeline(handler, maxId);
-			}
-		});
-		
-		lvTweets.setOnRefreshListener(new OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				Log.d("DEBUG", "calling load new tweets");
-				loadNewTweets();
-			}
-		});
-	}
-	
-	public void loadNewTweets() {
-		final JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+
+		// This handler adds newer tweets to the top of the feed
+		addNewerTweetsHandler = new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {
 				ArrayList<Tweet> newTweets = Tweet.fromJson(jsonTweets);
@@ -99,7 +117,5 @@ public class TweetsListFragment extends Fragment {
 				lvTweets.onRefreshComplete();
 			}
 		};
-		
-		TwitterClientApp.getRestClient().getHomeTimelineSince(handler, sinceId);
 	}
 }
