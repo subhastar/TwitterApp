@@ -21,15 +21,17 @@ public final class R {
         public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int ptr_pulltorefresh_arrow=0x7f020001;
+        public static final int ic_home=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int ic_mention=0x7f020002;
+        public static final int ptr_pulltorefresh_arrow=0x7f020003;
     }
     public static final class id {
         public static final int action_compose=0x7f08000f;
         public static final int action_settings=0x7f08000e;
         public static final int btnPostTweet=0x7f080001;
         public static final int etTweetContent=0x7f080000;
-        public static final int homeTimelineFragment=0x7f080002;
+        public static final int frame_container=0x7f080002;
         public static final int lvProfile=0x7f08000a;
         public static final int lvTweets=0x7f080003;
         public static final int ptr_id_header=0x7f080004;
