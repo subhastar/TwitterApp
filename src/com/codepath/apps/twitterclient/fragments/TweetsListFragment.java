@@ -5,14 +5,18 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.codepath.apps.twitterclient.EndlessScrollListener;
+import com.codepath.apps.twitterclient.ProfileActivity;
 import com.codepath.apps.twitterclient.R;
 import com.codepath.apps.twitterclient.TweetsAdapter;
 import com.codepath.apps.twitterclient.models.Tweet;
@@ -22,6 +26,8 @@ import eu.erikw.PullToRefreshListView;
 import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
 public abstract class TweetsListFragment extends Fragment {
+	private static final int REQUEST_CODE = 4;
+	
 	private TweetsAdapter tweetsAdapter;
 	private ArrayList<Tweet> tweets;
 	private PullToRefreshListView lvTweets;
@@ -64,6 +70,18 @@ public abstract class TweetsListFragment extends Fragment {
 			@Override
 			public void onRefresh() {
 				loadNewTweets();
+			}
+		});
+		
+		// Set up on click listeners
+		lvTweets.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapter, View parent, int position,
+					long rowId) {
+				String screenName = tweetsAdapter.getItem(position).getUser().getScreenName();
+				Intent i = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+				i.putExtra("screen_name", screenName);
+				startActivity(i);
 			}
 		});
 	}

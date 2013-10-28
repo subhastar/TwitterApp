@@ -8,29 +8,41 @@ import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.apps.twitterclient.fragments.UserTimelineFragment;
 import com.codepath.apps.twitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class ProfileActivity extends FragmentActivity {
+public class ProfileActivity extends FragmentActivity implements UserTimelineFragment.ScreenNameProvider  {
+	private String screenName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
 		
+		if (getIntent().hasExtra("screen_name")) {
+			screenName = getIntent().getStringExtra("screen_name");
+		}
+		
 		loadProfileInfo();
 	}
 	
 	private void loadProfileInfo() {
-		TwitterClientApp.getRestClient().getMyInfo(new JsonHttpResponseHandler() {
+		JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(JSONObject json) {
 				User u = User.fromJson(json);
 				getActionBar().setTitle("@" + u.getScreenName());
 				populateProfileHeader(u);
 			}
-		});
+		};
+		
+		if (screenName == null) {
+			TwitterClientApp.getRestClient().getMyInfo(handler);
+		} else {
+			TwitterClientApp.getRestClient().getUserInfo(handler, screenName);
+		}
 	}
 	
 	private void populateProfileHeader(User u) {
@@ -54,6 +66,10 @@ public class ProfileActivity extends FragmentActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.profile, menu);
 		return true;
+	}
+	
+	public String getScreenName() {
+		return screenName;
 	}
 
 }

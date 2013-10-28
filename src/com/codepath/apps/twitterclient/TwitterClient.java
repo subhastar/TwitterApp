@@ -38,6 +38,13 @@ public class TwitterClient extends OAuthBaseClient {
     	client.get(url, null, handler);
     }
     
+    public void getUserInfo(AsyncHttpResponseHandler handler, String screenName) {
+    	String url = getApiUrl("users/show.json");
+    	RequestParams params = new RequestParams();
+    	params.put("screen_name", screenName);
+    	client.get(url, params, handler);
+    }
+    
     public void getHomeTimeline(AsyncHttpResponseHandler handler, RequestParams params) {
     	String url = getApiUrl("statuses/home_timeline.json");
     	client.get(url, params, handler);
@@ -75,21 +82,31 @@ public class TwitterClient extends OAuthBaseClient {
     }
     
     
-    public void getUserTimeline(AsyncHttpResponseHandler handler, RequestParams params) {
+    private void getUserTimeline(AsyncHttpResponseHandler handler, RequestParams params) {
     	String url = getApiUrl("statuses/user_timeline.json");
     	client.get(url, params, handler);
     }
     
-    public void getUserTimelineSince(AsyncHttpResponseHandler handler, long sinceId) {
+    public void getUserTimeline(AsyncHttpResponseHandler handler, String screenName) {
     	RequestParams params = new RequestParams();
-    	params.put("since_id", Long.toString(sinceId));
+    	params.put("screen_name", screenName);
     	getUserTimeline(handler, params);
     }
     
-    public void getUserTimeline(AsyncHttpResponseHandler handler, long maxId) {
+    public void getUserTimelineSince(AsyncHttpResponseHandler handler, long sinceId,
+    		String screenName) {
+    	RequestParams params = new RequestParams();
+    	params.put("since_id", Long.toString(sinceId));
+    	params.put("screen_name", screenName);
+    	getUserTimeline(handler, params);
+    }
+    
+    public void getUserTimeline(AsyncHttpResponseHandler handler, long maxId,
+    		String screenName) {
     	RequestParams params = new RequestParams();
     	params.put("count", Integer.toString(COUNT));
     	params.put("max_id", Long.toString(maxId));
+    	params.put("screen_name", screenName);
     	getUserTimeline(handler, params);
     }
     
