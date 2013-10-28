@@ -10,5 +10,8 @@
     <string name="compose">Compose</string>
     <string name="title_activity_compose">ComposeActivity</string>
     <string name="post_tweet">Tweet</string>
+    <string name="profile">Profile</string>
+    <string name="title_activity_profile_activitiy">ProfileActivitiy</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
 </resources>

@@ -60,6 +60,9 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 		case R.id.action_compose:
 			compose();
 			return true;
+		case R.id.action_profile:
+			launchProfile();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -68,6 +71,11 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 	public void compose() {
 		Intent i = new Intent(getApplicationContext(), ComposeActivity.class);
 		startActivityForResult(i, REQUEST_CODE_COMPOSE);
+	}
+	
+	public void launchProfile() {
+		Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+		startActivity(i);
 	}
 	
 	@Override

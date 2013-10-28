@@ -33,6 +33,11 @@ public class TwitterClient extends OAuthBaseClient {
         super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
     }
     
+    public void getMyInfo(AsyncHttpResponseHandler handler) {
+    	String url = getApiUrl("account/verify_credentials.json");
+    	client.get(url, null, handler);
+    }
+    
     public void getHomeTimeline(AsyncHttpResponseHandler handler, RequestParams params) {
     	String url = getApiUrl("statuses/home_timeline.json");
     	client.get(url, params, handler);
@@ -59,14 +64,33 @@ public class TwitterClient extends OAuthBaseClient {
     public void getMentionsTimelineSince(AsyncHttpResponseHandler handler, long sinceId) {
     	RequestParams params = new RequestParams();
     	params.put("since_id", Long.toString(sinceId));
-    	getHomeTimeline(handler, params);
+    	getMentionsTimeline(handler, params);
     }
     
     public void getMentionsTimeline(AsyncHttpResponseHandler handler, long maxId) {
     	RequestParams params = new RequestParams();
     	params.put("count", Integer.toString(COUNT));
     	params.put("max_id", Long.toString(maxId));
-    	getHomeTimeline(handler, params);
+    	getMentionsTimeline(handler, params);
+    }
+    
+    
+    public void getUserTimeline(AsyncHttpResponseHandler handler, RequestParams params) {
+    	String url = getApiUrl("statuses/user_timeline.json");
+    	client.get(url, params, handler);
+    }
+    
+    public void getUserTimelineSince(AsyncHttpResponseHandler handler, long sinceId) {
+    	RequestParams params = new RequestParams();
+    	params.put("since_id", Long.toString(sinceId));
+    	getUserTimeline(handler, params);
+    }
+    
+    public void getUserTimeline(AsyncHttpResponseHandler handler, long maxId) {
+    	RequestParams params = new RequestParams();
+    	params.put("count", Integer.toString(COUNT));
+    	params.put("max_id", Long.toString(maxId));
+    	getUserTimeline(handler, params);
     }
     
     public void postTweet(AsyncHttpResponseHandler handler, String tweet) {
