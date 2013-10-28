@@ -28,24 +28,29 @@ public final class R {
         public static final int ptr_pulltorefresh_arrow=0x7f020004;
     }
     public static final class id {
-        public static final int action_compose=0x7f080010;
-        public static final int action_profile=0x7f080011;
-        public static final int action_settings=0x7f08000f;
+        public static final int action_compose=0x7f080015;
+        public static final int action_profile=0x7f080016;
+        public static final int action_settings=0x7f080014;
         public static final int btnPostTweet=0x7f080001;
         public static final int etTweetContent=0x7f080000;
-        public static final int fragment1=0x7f080002;
-        public static final int frame_container=0x7f080003;
-        public static final int lvProfile=0x7f08000b;
-        public static final int lvTweets=0x7f080004;
-        public static final int ptr_id_header=0x7f080005;
-        public static final int ptr_id_image=0x7f080006;
-        public static final int ptr_id_last_updated=0x7f08000a;
-        public static final int ptr_id_spinner=0x7f080007;
-        public static final int ptr_id_text=0x7f080009;
-        public static final int ptr_id_textwrapper=0x7f080008;
-        public static final int tvBody=0x7f08000e;
-        public static final int tvName=0x7f08000c;
-        public static final int tvTimestamp=0x7f08000d;
+        public static final int fragment1=0x7f080008;
+        public static final int frame_container=0x7f080009;
+        public static final int ivProfileImage=0x7f080003;
+        public static final int lvProfile=0x7f080011;
+        public static final int lvTweets=0x7f08000a;
+        public static final int ptr_id_header=0x7f08000b;
+        public static final int ptr_id_image=0x7f08000c;
+        public static final int ptr_id_last_updated=0x7f080010;
+        public static final int ptr_id_spinner=0x7f08000d;
+        public static final int ptr_id_text=0x7f08000f;
+        public static final int ptr_id_textwrapper=0x7f08000e;
+        public static final int rlHeader=0x7f080002;
+        public static final int tvBody=0x7f080013;
+        public static final int tvFollowers=0x7f080007;
+        public static final int tvFollowing=0x7f080006;
+        public static final int tvName=0x7f080004;
+        public static final int tvTagline=0x7f080005;
+        public static final int tvTimestamp=0x7f080012;
     }
     public static final class layout {
         public static final int activity_compose=0x7f030000;
